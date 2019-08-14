@@ -42,9 +42,89 @@ class Processor:
 
         getattr(self, self.instruction_set[lookup_code])()
 
+    def opcode_0000(self):
+        pass
+
+    def opcode_1000(self):
+        """
+        1NNN
+
+        goto NNN;
+
+        :return: None
+        :rtype: None
+        """
+
+        self.program_counter = self.current_op_code & 0x0FFF
+
+    def opcode_2000(self):
+        pass
+
+    def opcode_3000(self):
+        pass
+
+    def opcode_4000(self):
+        pass
+
+    def opcode_5000(self):
+        pass
+
+    def opcode_6000(self):
+        """
+        6XNN
+
+        Sets VX to NN
+
+        :return: None
+        :rtype: None
+        """
+
+        self.registers[(self.current_op_code & 0x0F00) >> 8] = self.current_op_code & 0x00FF
+
+    def opcode_7000(self):
+        """
+        7XNN
+
+        Adds NN to VX. (Carry flag is not changed)
+
+        :return: None
+        :rtype: None
+        """
+
+        self.registers[(self.current_op_code & 0x0F00) >> 8] += self.current_op_code & 0x00FF
+
+    def opcode_8000(self):
+        pass
+
+    def opcode_9000(self):
+        pass
+
     def opcode_a000(self):
-        print('opcode_a000')
+        """
+        ANNN
+
+        Sets I to the address NNN.
+
+        :return: None
+        :rtype: None
+        """
+
         self.register_i = self.current_op_code & 0x0FFF
+
+    def opcode_b000(self):
+        pass
+
+    def opcode_c000(self):
+        pass
+
+    def opcode_d000(self):
+        pass
+
+    def opcode_e000(self):
+        pass
+
+    def opcode_f000(self):
+        pass
 
 
 if __name__ == '__main__':
