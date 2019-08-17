@@ -22,14 +22,35 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.execute_op_code()
         self.assertEqual(op_code & 0x0FFF, self.cpu.program_counter)
 
+    def test_op_code_3000(self):
+        """
+        3XNN
+
+        Skips the next instruction if VX equals NN
+
+        :return: None
+        :rtype: None
+        """
+
+        op_code = 0x32F0
+
+        self.cpu.current_op_code = op_code
+        self.cpu.registers[0x0200 >> 8] = 0x00F0
+        self.cpu.execute_op_code()
+        self.assertEqual(0x0204, self.cpu.program_counter)
+
+        self.cpu.registers[0x0200 >> 8] = 0x00F1
+        self.cpu.execute_op_code()
+        self.assertEqual(0x0206, self.cpu.program_counter)
+
     def test_op_code_6000(self):
         """
         6XNN
 
         Sets VX to NN
 
-        :return:
-        :rtype:
+        :return: None
+        :rtype: None
         """
 
         op_code = 0x62F0
@@ -44,8 +65,8 @@ class TestOpCodes(unittest.TestCase):
 
         Adds NN to VX. (Carry flag is not changed)
 
-        :return:
-        :rtype:
+        :return: None
+        :rtype: None
         """
 
         op_code = 0x72F0
@@ -61,8 +82,8 @@ class TestOpCodes(unittest.TestCase):
 
         Sets I to the address NNN.
 
-        :return:
-        :rtype:
+        :return: None
+        :rtype: None
         """
 
         op_code = 0xA2F0

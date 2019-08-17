@@ -61,7 +61,19 @@ class Processor:
         pass
 
     def opcode_3000(self):
-        pass
+        """
+        3XNN
+
+        Skips the next instruction if VX equals NN
+
+        :return: None
+        :rtype: None
+        """
+
+        if self.registers[(self.current_op_code & 0x0F00) >> 8] == self.current_op_code & 0x00FF:
+            self.program_counter += 4
+        else:
+            self.program_counter += 2
 
     def opcode_4000(self):
         pass
