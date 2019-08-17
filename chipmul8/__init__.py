@@ -240,7 +240,7 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            self.registers[x] = self.registers[x] ^ self.registers[y]
 
         def sub_op_code_8004(x, y):
             """
