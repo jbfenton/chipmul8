@@ -192,7 +192,7 @@ class Processor:
             :rtype: None
             """
 
-            self.registers[(self.current_op_code & 0x0F00) >> 8] = self.registers[(self.current_op_code & 0x00F0) >> 4]
+            self.registers[x] = self.registers[y]
 
         def sub_op_code_8001(x, y):
             """
@@ -208,7 +208,7 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            self.registers[x] = self.registers[x] | self.registers[y]
 
         def sub_op_code_8002(x, y):
             """

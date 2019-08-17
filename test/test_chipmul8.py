@@ -188,8 +188,12 @@ class TestOpCodes(unittest.TestCase):
         """
 
         op_code = 0x82F1
+        self.cpu.registers[0x2] = 0x22
+        self.cpu.registers[0xF] = 0x11
         self.cpu.current_op_code = op_code
         self.cpu.execute_op_code()
+
+        self.assertEqual(0x33, self.cpu.registers[0x2])
 
     def test_op_code_8002(self):
         """
