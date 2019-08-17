@@ -43,6 +43,27 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.execute_op_code()
         self.assertEqual(0x0206, self.cpu.program_counter)
 
+    def test_op_code_4000(self):
+        """
+        4XNN
+
+        Skips the next instruction if VX does not equal NN
+
+        :return: None
+        :rtype: None
+        """
+
+        op_code = 0x42F0
+
+        self.cpu.current_op_code = op_code
+        self.cpu.registers[0x0200 >> 8] = 0x00F0
+        self.cpu.execute_op_code()
+        self.assertEqual(0x0202, self.cpu.program_counter)
+
+        self.cpu.registers[0x0200 >> 8] = 0x00F1
+        self.cpu.execute_op_code()
+        self.assertEqual(0x0206, self.cpu.program_counter)
+
     def test_op_code_6000(self):
         """
         6XNN
