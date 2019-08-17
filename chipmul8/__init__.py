@@ -192,7 +192,7 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            self.registers[(self.current_op_code & 0x0F00) >> 8] = self.registers[(self.current_op_code & 0x00F0) >> 4]
 
         def sub_op_code_8001(x, y):
             """

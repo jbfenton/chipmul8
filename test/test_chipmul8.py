@@ -157,9 +157,25 @@ class TestOpCodes(unittest.TestCase):
         :rtype: None
         """
 
-        op_code = 0x82F0
+        op_code = 0x8230
+
+        self.cpu.registers[2] = 0x11
+        self.cpu.registers[3] = 0xF0
+
         self.cpu.current_op_code = op_code
         self.cpu.execute_op_code()
+
+        self.assertEqual(0xF0, self.cpu.registers[2])
+
+        op_code = 0x82F0
+
+        self.cpu.registers[0x2] = 0x11
+        self.cpu.registers[0xF] = 0xF0
+
+        self.cpu.current_op_code = op_code
+        self.cpu.execute_op_code()
+
+        self.assertEqual(0xF0, self.cpu.registers[2])
 
     def test_op_code_8001(self):
         """
