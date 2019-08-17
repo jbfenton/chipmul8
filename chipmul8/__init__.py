@@ -91,7 +91,19 @@ class Processor:
             self.program_counter += 2
 
     def opcode_5000(self):
-        pass
+        """
+        5XY0
+
+        Skips the next instruction if VX equals VY
+
+        :return: None
+        :rtype: None
+        """
+
+        if self.registers[(self.current_op_code & 0x0F00) >> 8] == self.registers[(self.current_op_code & 0x00F0) >> 4]:
+            self.program_counter += 4
+        else:
+            self.program_counter += 2
 
     def opcode_6000(self):
         """
