@@ -23,11 +23,11 @@ class Processor:
             for op_code_lookup in cls.__dict__ if str(op_code_lookup).startswith('opcode_')
         }
 
-    def __init__(self):
+    def __init__(self, start_address=0x200):
         self.ram = RandomAccessMemory()
         self.registers = [0] * 16
         self.register_i = 0
-        self.program_counter = 0
+        self.program_counter = start_address
         self.stack_pointer = 0
 
         self.delay_register = 0
@@ -80,6 +80,7 @@ class Processor:
         """
 
         self.registers[(self.current_op_code & 0x0F00) >> 8] = self.current_op_code & 0x00FF
+        self.program_counter += 2
 
     def opcode_7000(self):
         """
@@ -92,6 +93,7 @@ class Processor:
         """
 
         self.registers[(self.current_op_code & 0x0F00) >> 8] += self.current_op_code & 0x00FF
+        self.program_counter += 2
 
     def opcode_8000(self):
         pass
@@ -110,6 +112,7 @@ class Processor:
         """
 
         self.register_i = self.current_op_code & 0x0FFF
+        self.program_counter += 2
 
     def opcode_b000(self):
         pass

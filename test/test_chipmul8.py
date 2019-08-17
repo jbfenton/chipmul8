@@ -36,6 +36,7 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.current_op_code = op_code
         self.cpu.execute_op_code()
         self.assertEqual(op_code & 0x00FF, self.cpu.registers[2])
+        self.assertEqual(0x202, self.cpu.program_counter)
 
     def test_op_code_7000(self):
         """
@@ -52,6 +53,7 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.registers[2] = 0x00A2
         self.cpu.execute_op_code()
         self.assertEqual(402, self.cpu.registers[2])
+        self.assertEqual(0x202, self.cpu.program_counter)
 
     def test_op_code_a000(self):
         """
@@ -67,6 +69,7 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.current_op_code = op_code
         self.cpu.execute_op_code()
         self.assertEqual(op_code & 0x0FFF, self.cpu.register_i)
+        self.assertEqual(0x202, self.cpu.program_counter)
 
 
 if __name__ == '__main__':
