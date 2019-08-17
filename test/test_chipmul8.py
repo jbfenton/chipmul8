@@ -50,6 +50,24 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.execute_op_code()
         self.assertEqual(op_code & 0x0FFF, self.cpu.program_counter)
 
+    def test_op_code_2000(self):
+        """
+        2NNN
+
+        Calls subroutine at NNN
+
+        :return:
+        :rtype:
+        """
+
+        op_code = 0x22F0
+        self.cpu.current_op_code = op_code
+        self.cpu.program_counter = 0x200
+        self.cpu.execute_op_code()
+        self.assertEqual(1, self.cpu.stack_pointer)
+        self.assertEqual(0x200, self.cpu.stack[0])
+        self.assertEqual(0x02F0, self.cpu.program_counter)
+
     def test_op_code_3000(self):
         """
         3XNN

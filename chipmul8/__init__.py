@@ -26,6 +26,7 @@ class Processor:
     def __init__(self, start_address=0x200):
         self.ram = RandomAccessMemory()
         self.registers = [0] * 16
+        self.stack = [0] * 16
         self.register_i = 0
         self.program_counter = start_address
         self.stack_pointer = 0
@@ -97,7 +98,18 @@ class Processor:
         self.program_counter = self.current_op_code & 0x0FFF
 
     def opcode_2000(self):
-        pass
+        """
+        2NNN
+
+        Calls subroutine at NNN
+
+        :return:
+        :rtype:
+        """
+
+        self.stack[self.stack_pointer] = self.program_counter
+        self.stack_pointer += 1
+        self.program_counter = self.current_op_code & 0x0FFF
 
     def opcode_3000(self):
         """
