@@ -345,6 +345,25 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(op_code & 0x0FFF, self.cpu.register_i)
         self.assertEqual(0x202, self.cpu.program_counter)
 
+    def test_op_code_b000(self):
+        """
+        BNNN
+
+        Jumps to the address NNN plus V0
+
+        :return: None
+        :rtype: None
+        """
+
+        op_code = 0xB111
+        self.cpu.registers[0x0] = 0xF3
+        self.cpu.program_counter = 0x200
+        self.cpu.current_op_code = op_code
+        self.cpu.execute_op_code()
+
+        self.assertEqual(0x204, self.cpu.program_counter)
+        self.assertEqual(0xF3, self.cpu.registers[0x0])
+
     def test_op_code_e09e(self):
         """
         EX9E

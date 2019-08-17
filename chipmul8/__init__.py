@@ -374,7 +374,16 @@ class Processor:
         self.program_counter += 2
 
     def opcode_b000(self):
-        pass
+        """
+        BNNN
+
+        Jumps to the address NNN plus V0
+
+        :return: None
+        :rtype: None
+        """
+
+        self.program_counter = (self.current_op_code & 0x0FFF) + self.registers[0x0]
 
     def opcode_c000(self):
         pass
