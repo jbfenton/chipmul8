@@ -119,6 +119,28 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(402, self.cpu.registers[2])
         self.assertEqual(0x202, self.cpu.program_counter)
 
+    def test_op_code_9000(self):
+        """
+        9XY0
+
+        Skips the next instruction if VX doesn't equal VY
+
+        :return:
+        :rtype:
+        """
+
+        op_code = 0x9230
+
+        self.cpu.current_op_code = op_code
+        self.cpu.registers[2] = 0x00FF
+        self.cpu.registers[3] = 0x00FF
+        self.cpu.execute_op_code()
+        self.assertEqual(0x202, self.cpu.program_counter)
+        self.cpu.registers[2] = 0x00FF
+        self.cpu.registers[3] = 0x00F1
+        self.cpu.execute_op_code()
+        self.assertEqual(0x206, self.cpu.program_counter)
+
     def test_op_code_a000(self):
         """
         ANNN
