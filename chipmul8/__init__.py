@@ -42,8 +42,47 @@ class Processor:
 
         getattr(self, self.instruction_set[lookup_code])()
 
-    def opcode_0000(self):
-        pass
+    def opcode_0(self):
+        """
+        00EN
+
+        :return: None
+        :rtype: None
+        """
+
+        def sub_op_code_00e0():
+            """
+            00E0
+
+            Clear the screen
+
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_00ee():
+            """
+            00EE
+
+            Return from subroutine
+
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        sub_op_code_lookup = {
+            0x00E0: sub_op_code_00e0,
+            0x00EE: sub_op_code_00ee
+        }
+
+        sub_op_code = sub_op_code_lookup[(self.current_op_code & 0x00FF)]
+        print(f"Executing: {sub_op_code.__name__}")
+
+        sub_op_code()
 
     def opcode_1000(self):
         """
@@ -132,7 +171,176 @@ class Processor:
         self.program_counter += 2
 
     def opcode_8000(self):
-        pass
+        """
+        8XYN
+
+        :return: None
+        :rtype: None
+        """
+
+        def sub_op_code_8000(x, y):
+            """
+            8XY0
+
+            Sets VX to the value of VY
+
+            :param x: Value of X in in current opcode (8XYN)
+            :type x: int
+            :param y: Value of Y in current opcode (8XYN)
+            :type y: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_8001(x, y):
+            """
+            8XY1
+
+            Sets VX to VX or VY
+
+            :param x: Value of X in in current opcode (8XYN)
+            :type x: int
+            :param y: Value of Y in current opcode (8XYN)
+            :type y: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_8002(x, y):
+            """
+            8XY2
+
+            Sets VX to VX and VY
+
+            :param x: Value of X in in current opcode (8XYN)
+            :type x: int
+            :param y: Value of Y in current opcode (8XYN)
+            :type y: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_8003(x, y):
+            """
+            8XY3
+
+            Sets VX to VX xor VY
+
+            :param x: Value of X in in current opcode (8XYN)
+            :type x: int
+            :param y: Value of Y in current opcode (8XYN)
+            :type y: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_8004(x, y):
+            """
+            8XY4
+
+            Adds VY to VX. VF is set to 1 when there is a carry, and to 0 when there isn't
+
+            :param x: Value of X in in current opcode (8XYN)
+            :type x: int
+            :param y: Value of Y in current opcode (8XYN)
+            :type y: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_8005(x, y):
+            """
+            8XY5
+
+            VY is subtracted from VX. VF is set to 0 when there is a borrow, and to 0 where there isn't
+
+            :param x: Value of X in in current opcode (8XYN)
+            :type x: int
+            :param y: Value of Y in current opcode (8XYN)
+            :type y: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_8006(x, y):
+            """
+            8XY6
+
+            Stores the least significant bit of VX in VF and then shifts VX to the right by 1
+
+            :param x: Value of X in in current opcode (8XYN)
+            :type x: int
+            :param y: Value of Y in current opcode (8XYN)
+            :type y: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_8007(x, y):
+            """
+            8XY7
+
+            Sets VX to VY minus VX. VF is set to 0 when there is a borrow, and 1 when there isn't
+
+            :param x: Value of X in in current opcode (8XYN)
+            :type x: int
+            :param y: Value of Y in current opcode (8XYN)
+            :type y: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_800e(x, y):
+            """
+            8XYE
+
+            Stores the most significant bit of VX in VF and then shifts VX to the left by 1
+
+            :param x: Value of X in in current opcode (8XYN)
+            :type x: int
+            :param y: Value of Y in current opcode (8XYN)
+            :type y: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        sub_op_code_lookup = {
+            0x8000: sub_op_code_8000,
+            0x8001: sub_op_code_8001,
+            0x8002: sub_op_code_8002,
+            0x8003: sub_op_code_8003,
+            0x8004: sub_op_code_8004,
+            0x8005: sub_op_code_8005,
+            0x8006: sub_op_code_8006,
+            0x8007: sub_op_code_8007,
+            0x800e: sub_op_code_800e
+        }
+
+        x_value = (self.current_op_code & 0x0F00) >> 8
+        y_value = (self.current_op_code & 0x00F0) >> 4
+
+        sub_op_code = sub_op_code_lookup[(self.current_op_code & 0xF00F)]
+        print(f"Executing: {sub_op_code.__name__}")
+
+        sub_op_code(x_value, y_value)
 
     def opcode_9000(self):
         """
@@ -171,10 +379,209 @@ class Processor:
         pass
 
     def opcode_e000(self):
-        pass
+        """
+        EXNN
+
+        :return: None
+        :rtype: None
+        """
+
+        def sub_op_code_ex9e(x):
+            """
+            EX9E
+
+            Skips the next instruction if the key stored in VX is pressed
+
+            :param x: Value of X from opcode (EX9E)
+            :type x: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_exa1(x):
+            """
+            EXA1
+
+            Skips the next instruction if the key stored in VX isn't pressed
+
+            :param x: Value if X from opcode (EXA1)
+            :type x: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        sub_op_code_lookup = {
+            0xe09E: sub_op_code_ex9e,
+            0xe0A1: sub_op_code_exa1
+        }
+
+        sub_op_code = sub_op_code_lookup[(self.current_op_code & 0xF0FF)]
+        x_value = (self.current_op_code & 0x0F00) >> 8
+
+        print(f"Executing: {sub_op_code.__name__}")
+
+        sub_op_code(x_value)
 
     def opcode_f000(self):
-        pass
+        """
+        FXNN
+
+        :return: None
+        :rtype: None
+        """
+
+        def sub_op_code_fx07(x):
+            """
+            FX07
+
+            Sets VX to the value of the delay timer
+
+            :param x: X value from current opcode (FXNN)
+            :type x: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_fx0a(x):
+            """
+            FX0A
+
+            A key press is awaited, and then stored in VX (Blocking operation)
+
+            :param x: X value from current opcode (FXNN)
+            :type x: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_fx15(x):
+            """
+            FX15
+
+            Sets the delay timer to VX
+
+            :param x: X value from current opcode (FXNN)
+            :type x: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_fx18(x):
+            """
+            FX18
+
+            Sets the sound timer to VX
+
+            :param x: X value from current opcode (FXNN)
+            :type x: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_fx1e(x):
+            """
+            FX1E
+
+            Adds VX to I
+
+            :param x: X value from current opcode (FXNN)
+            :type x: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_fx29(x):
+            """
+            FX29
+
+            Sets I to the location of the sprite for the character in VX
+            Characters 0-F (in hexadecimal) are represented by a 4x5 font
+
+            :param x: X value from current opcode (FXNN)
+            :type x: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_fx33(x):
+            """
+            FX33
+
+            Stores the binary-coded decimal representation of VX, with the most significant of three digits at the
+            address in I, the middle digit at I plus 1, and the least significant digit at I plus 2.
+
+            :param x: X value from current opcode (FXNN)
+            :type x: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_fx55(x):
+            """
+            FX55
+
+            Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for
+            each value written, but I itself is left unmodified
+
+            :param x: X value from current opcode (FXNN)
+            :type x: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        def sub_op_code_fx65(x):
+            """
+            FX65
+
+            Fills V0 to VX (including VX) with values from memory starting at address I.
+            The offset from I is increased by 1 for each value written, but I itself is left unmodified.
+
+            :param x: X value from current opcode (FXNN)
+            :type x: int
+            :return: None
+            :rtype: None
+            """
+
+            pass
+
+        sub_op_code_lookup = {
+            0xF007: sub_op_code_fx07,
+            0xF00a: sub_op_code_fx0a,
+            0xF015: sub_op_code_fx15,
+            0xF018: sub_op_code_fx18,
+            0xF01E: sub_op_code_fx1e,
+            0xF029: sub_op_code_fx29,
+            0xF033: sub_op_code_fx33,
+            0xF055: sub_op_code_fx55,
+            0xF065: sub_op_code_fx65
+        }
+
+        sub_op_code = sub_op_code_lookup[(self.current_op_code & 0xF0FF)]
+        x_value = (self.current_op_code & 0x0F00) >> 8
+
+        print(f"Executing: {sub_op_code.__name__}")
+
+        sub_op_code(x_value)
 
 
 if __name__ == '__main__':
