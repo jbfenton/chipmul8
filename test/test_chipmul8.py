@@ -161,10 +161,10 @@ class TestOpCodes(unittest.TestCase):
 
         self.cpu.registers[2] = 0x11
         self.cpu.registers[3] = 0xF0
-
+        self.cpu.program_counter = 0x200
         self.cpu.current_op_code = op_code
         self.cpu.execute_op_code()
-
+        self.assertEqual(0x202, self.cpu.program_counter)
         self.assertEqual(0xF0, self.cpu.registers[2])
 
         op_code = 0x82F0
@@ -174,7 +174,7 @@ class TestOpCodes(unittest.TestCase):
 
         self.cpu.current_op_code = op_code
         self.cpu.execute_op_code()
-
+        self.assertEqual(0x204, self.cpu.program_counter)
         self.assertEqual(0xF0, self.cpu.registers[2])
 
     def test_op_code_8001(self):
@@ -190,9 +190,11 @@ class TestOpCodes(unittest.TestCase):
         op_code = 0x82F1
         self.cpu.registers[0x2] = 0x22
         self.cpu.registers[0xF] = 0x11
+        self.cpu.program_counter = 0x200
         self.cpu.current_op_code = op_code
         self.cpu.execute_op_code()
 
+        self.assertEqual(0x202, self.cpu.program_counter)
         self.assertEqual(0x33, self.cpu.registers[0x2])
 
     def test_op_code_8002(self):
@@ -208,9 +210,11 @@ class TestOpCodes(unittest.TestCase):
         op_code = 0x85F2
         self.cpu.registers[0x5] = 0xF3
         self.cpu.registers[0xF] = 0x01
+        self.cpu.program_counter = 0x200
         self.cpu.current_op_code = op_code
         self.cpu.execute_op_code()
 
+        self.assertEqual(0x202, self.cpu.program_counter)
         self.assertEqual(0x1, self.cpu.registers[0x5])
 
     def test_op_code_8003(self):
@@ -226,9 +230,11 @@ class TestOpCodes(unittest.TestCase):
         op_code = 0x85F3
         self.cpu.registers[0x5] = 0xF3
         self.cpu.registers[0xF] = 0x01
+        self.cpu.program_counter = 0x200
         self.cpu.current_op_code = op_code
         self.cpu.execute_op_code()
 
+        self.assertEqual(0x202, self.cpu.program_counter)
         self.assertEqual(0xF2, self.cpu.registers[0x5])
 
     def test_op_code_8004(self):

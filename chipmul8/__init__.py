@@ -193,6 +193,7 @@ class Processor:
             """
 
             self.registers[x] = self.registers[y]
+            self.program_counter += 2
 
         def sub_op_code_8001(x, y):
             """
@@ -209,6 +210,7 @@ class Processor:
             """
 
             self.registers[x] = self.registers[x] | self.registers[y]
+            self.program_counter += 2
 
         def sub_op_code_8002(x, y):
             """
@@ -225,6 +227,7 @@ class Processor:
             """
 
             self.registers[x] = self.registers[x] & self.registers[y]
+            self.program_counter += 2
 
         def sub_op_code_8003(x, y):
             """
@@ -241,6 +244,7 @@ class Processor:
             """
 
             self.registers[x] = self.registers[x] ^ self.registers[y]
+            self.program_counter += 2
 
         def sub_op_code_8004(x, y):
             """
