@@ -73,7 +73,9 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            self.program_counter = self.stack[self.stack_pointer - 1]
+            self.stack_pointer -= 1
+            self.program_counter += 2
 
         sub_op_code_lookup = {
             0x00E0: sub_op_code_00e0,

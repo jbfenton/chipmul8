@@ -31,9 +31,16 @@ class TestOpCodes(unittest.TestCase):
         :rtype: None
         """
 
+        # execute a subroutine
+        self.test_op_code_2000()
+
+        # return from the subroutine
         op_code = 0x00EE
         self.cpu.current_op_code = op_code
         self.cpu.execute_op_code()
+
+        self.assertEqual(0, self.cpu.stack_pointer)
+        self.assertEqual(0x202, self.cpu.program_counter)
 
     def test_op_code_1000(self):
         """
