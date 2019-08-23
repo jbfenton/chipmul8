@@ -479,13 +479,26 @@ class TestOpCodes(unittest.TestCase):
 
         Adds VX to I
 
+        VF is set to 1 when there is a range overflow (I + VX > 0xFFF), and to 0 when there isn't.
+
         :return: None
         :rtype: None
         """
 
         op_code = 0xF51E
+        self.cpu.registers[0x5] = 0x1
+        self.cpu.register_i = 0x1
         self.cpu.current_op_code = op_code
         self.cpu.execute_op_code()
+        self.assertEqual(0x2, self.cpu.register_i)
+        self.assertEqual(0x0, self.cpu.registers[0xF])
+        self.assertEqual(0x0202, self.cpu.program_counter)
+
+        self.cpu.registers[0x5] = 0xFFF
+        self.cpu.execute_op_code()
+        self.assertEqual(0x1001, self.cpu.register_i)
+        self.assertEqual(0x1, self.cpu.registers[0xF])
+        self.assertEqual(0x0204, self.cpu.program_counter)
 
     def test_op_code_f029(self):
         """

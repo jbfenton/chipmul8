@@ -523,13 +523,22 @@ class Processor:
 
             Adds VX to I
 
+            VF is set to 1 when there is a range overflow (I+VX>0xFFF), and to 0 when there isn't.
+
             :param x: X value from current opcode (FXNN)
             :type x: int
             :return: None
             :rtype: None
             """
 
-            pass
+            self.register_i += self.registers[x]
+
+            if self.register_i + self.registers[x] > 0xFFF:
+                self.registers[0xF] = 1
+            else:
+                self.registers[0xF] = 0
+
+            self.program_counter += 2
 
         def sub_op_code_fx29(x):
             """
