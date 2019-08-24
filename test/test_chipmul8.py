@@ -403,6 +403,15 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.current_op_code = op_code
         self.cpu.execute_op_code()
 
+        # key isn't pressed
+        self.assertEqual(0x202, self.cpu.program_counter)
+
+        # key is pressed
+        self.cpu.registers[0x1] = 0x1
+        self.cpu.keyboard[0x1] = True
+        self.cpu.execute_op_code()
+        self.assertEqual(0x206, self.cpu.program_counter)
+
     def test_op_code_e0a1(self):
         """
         EXA1
@@ -415,7 +424,18 @@ class TestOpCodes(unittest.TestCase):
 
         op_code = 0xE5A1
         self.cpu.current_op_code = op_code
+        self.cpu.registers[0x5] = 0x5
+        self.cpu.keyboard[0x5] = True
         self.cpu.execute_op_code()
+
+        # key is pressed
+        self.assertEqual(0x202, self.cpu.program_counter)
+
+        # key isn't pressed
+        self.cpu.registers[0x5] = 0x5
+        self.cpu.keyboard[0x5] = False
+        self.cpu.execute_op_code()
+        self.assertEqual(0x206, self.cpu.program_counter)
 
     def test_op_code_f007(self):
         """

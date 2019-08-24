@@ -36,6 +36,8 @@ class Processor:
 
         self.current_op_code = 0
 
+        self.keyboard = [False] * 16
+
     def execute_op_code(self):
         lookup_code = hex(self.current_op_code & 0xF000)[2:]
         print(f"Executing opcode: {hex(self.current_op_code)}")
@@ -425,7 +427,10 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            if self.keyboard[self.registers[x]] is True:
+                self.program_counter += 4
+            else:
+                self.program_counter += 2
 
         def sub_op_code_exa1(x):
             """
@@ -439,7 +444,10 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            if self.keyboard[self.registers[x]] is False:
+                self.program_counter += 4
+            else:
+                self.program_counter += 2
 
         sub_op_code_lookup = {
             0xe09E: sub_op_code_ex9e,
