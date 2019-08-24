@@ -276,7 +276,14 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            self.registers[x] += self.registers[y]
+
+            if self.registers[y] > (0xFF - self.registers[x]):
+                self.registers[0xF] = 1
+            else:
+                self.registers[0xF] = 0
+
+            self.program_counter += 2
 
         def sub_op_code_8005(x, y):
             """
