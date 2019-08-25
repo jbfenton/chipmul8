@@ -508,7 +508,8 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            self.registers[x] = self.delay_register
+            self.program_counter += 2
 
         def sub_op_code_fx0a(x):
             """
@@ -522,7 +523,16 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            current_program_counter = self.program_counter
+
+            for index, key in enumerate(self.keyboard):
+                if key:
+                    self.registers[x] = index
+                    self.program_counter += 2
+                    break
+
+            if self.program_counter <= current_program_counter:
+                return
 
         def sub_op_code_fx15(x):
             """
@@ -536,7 +546,9 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            self.delay_register = self.registers[x]
+
+            self.program_counter += 2
 
         def sub_op_code_fx18(x):
             """
@@ -550,7 +562,9 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            self.sound_register = self.registers[x]
+
+            self.program_counter += 2
 
         def sub_op_code_fx1e(x):
             """

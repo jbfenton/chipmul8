@@ -492,7 +492,10 @@ class TestOpCodes(unittest.TestCase):
 
         op_code = 0xF107
         self.cpu.current_op_code = op_code
+        self.cpu.delay_register = 0xF
         self.cpu.execute_op_code()
+        self.assertEqual(0xF, self.cpu.registers[0x1])
+        self.assertEqual(0x202, self.cpu.program_counter)
 
     def test_op_code_f00a(self):
         """
@@ -507,6 +510,13 @@ class TestOpCodes(unittest.TestCase):
         op_code = 0xF20A
         self.cpu.current_op_code = op_code
         self.cpu.execute_op_code()
+        self.assertEqual(0x200, self.cpu.program_counter)
+
+        # Simulate a key press
+        self.cpu.keyboard[0xf] = True
+        self.cpu.execute_op_code()
+        self.assertEqual(0x202, self.cpu.program_counter)
+        self.assertEqual(0xF, self.cpu.registers[0x2])
 
     def test_op_code_f015(self):
         """
@@ -520,7 +530,10 @@ class TestOpCodes(unittest.TestCase):
 
         op_code = 0xF315
         self.cpu.current_op_code = op_code
+        self.cpu.registers[0x3] = 0xF
         self.cpu.execute_op_code()
+        self.assertEqual(0xF, self.cpu.delay_register)
+        self.assertEqual(0x202, self.cpu.program_counter)
 
     def test_op_code_f018(self):
         """
@@ -534,7 +547,10 @@ class TestOpCodes(unittest.TestCase):
 
         op_code = 0xF418
         self.cpu.current_op_code = op_code
+        self.cpu.registers[0x4] = 0xF
         self.cpu.execute_op_code()
+        self.assertEqual(0xF, self.cpu.sound_register)
+        self.assertEqual(0x202, self.cpu.program_counter)
 
     def test_op_code_f01e(self):
         """
