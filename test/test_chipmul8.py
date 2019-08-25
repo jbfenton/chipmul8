@@ -1,6 +1,7 @@
 import unittest
 from random import Random
 from unittest.mock import patch
+
 from chipmul8 import Processor
 
 
@@ -22,7 +23,16 @@ class TestOpCodes(unittest.TestCase):
 
         op_code = 0x00E0
         self.cpu.current_op_code = op_code
+
+        for y_index, row in enumerate(self.cpu.display_memory):
+            for x_index, pixel in enumerate(row):
+                self.cpu.display_memory[y_index][x_index] = 1
+
         self.cpu.execute_op_code()
+
+        for y_index, row in enumerate(self.cpu.display_memory):
+            for x_index, pixel in enumerate(row):
+                self.assertEqual(0x0, self.cpu.display_memory[y_index][x_index])
 
     def test_op_code_00ee(self):
         """
@@ -455,6 +465,50 @@ class TestOpCodes(unittest.TestCase):
 
         self.assertEqual(0x202, self.cpu.program_counter)
         self.assertEqual(0x10, self.cpu.registers[0x1])
+
+    def test_op_code_d000(self):
+        """
+        DXYN
+
+        Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a height of N pixels.
+        Each row of 8 pixels is read as bit-coded starting from memory location I;
+        I value does not change after the execution of this instruction.
+        As described above, VF is set to 1 if any screen pixels are flipped from set to unset when the sprite is drawn,
+        and to 0 if that does not happen
+
+        :return: None
+        :rtype: None
+        """
+
+        op_code = 0xD004
+        self.cpu.current_op_code = op_code
+        self.cpu.register_i = 0x300
+        self.cpu.ram.set_address(0x300, 0x10)
+        self.cpu.ram.set_address(0x301, 0x28)
+        self.cpu.ram.set_address(0x302, 0x44)
+        self.cpu.ram.set_address(0x303, 0xFE)
+        self.cpu.execute_op_code()
+
+        sprite_coordinates = [
+            (3, 0),
+            (2, 1),
+            (4, 1),
+            (1, 2),
+            (5, 2),
+            (0, 3),
+            (1, 3),
+            (2, 3),
+            (3, 3),
+            (4, 3),
+            (5, 3),
+            (6, 3),
+        ]
+
+        for coordinate_x, coordinate_y in sprite_coordinates:
+            print(coordinate_x, coordinate_y)
+            self.assertEqual(0x1, self.cpu.display_memory[coordinate_y, coordinate_x])
+
+        self.assertEqual(0x202, self.cpu.program_counter)
 
     def test_op_code_e09e(self):
         """

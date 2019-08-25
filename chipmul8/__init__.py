@@ -1,4 +1,6 @@
 from random import Random
+
+import numpy as np
 from hexdump import dumpgen
 
 random = Random()
@@ -42,6 +44,8 @@ class Processor:
 
         self.current_op_code = 0
 
+        self.display_memory = np.zeros(shape=(32, 64), dtype=np.int8)
+
         self.keyboard = [False] * 16
 
     def execute_op_code(self):
@@ -69,7 +73,8 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            self.display_memory = np.zeros(shape=(32, 64), dtype=np.int8)
+            self.program_counter += 2
 
         def sub_op_code_00ee():
             """
@@ -448,7 +453,37 @@ class Processor:
         self.program_counter += 2
 
     def opcode_d000(self):
-        pass
+        """
+        DXYN
+
+        Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a height of N pixels.
+        Each row of 8 pixels is read as bit-coded starting from memory location I;
+        I value does not change after the execution of this instruction.
+        As described above, VF is set to 1 if any screen pixels are flipped from set to unset when the sprite is drawn,
+        and to 0 if that does not happen
+
+        :return: None
+        :rtype: None
+        """
+
+        x_coordinate = self.registers[(self.current_op_code & 0x0F00) >> 8]
+        y_coordinate = self.registers[(self.current_op_code & 0x00F0) >> 4]
+        height = self.current_op_code & 0x000F
+
+        self.registers[0xF] = 0x0
+
+        for y_sprite_coordinate in range(0, height):
+            sprite_row = self.ram[self.register_i + y_sprite_coordinate]
+
+            for x_sprite_coordinate, bit in enumerate("{0:08b}".format(sprite_row)):
+                if int(bit) == 0x1:
+                    x = x_sprite_coordinate + x_coordinate
+                    y = y_sprite_coordinate + y_coordinate
+                    if self.display_memory[y, x] == 1:
+                        self.registers[0xF] = 1
+                    self.display_memory[y, x] = 1
+
+        self.program_counter += 2
 
     def opcode_e000(self):
         """
