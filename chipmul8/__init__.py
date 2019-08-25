@@ -643,7 +643,13 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            temp_i = self.register_i
+
+            for index in range(0x0, x + 0x1):
+                self.ram.set_address(temp_i, self.registers[index])
+                temp_i += 1
+
+            self.program_counter += 2
 
         def sub_op_code_fx65(x):
             """
@@ -658,7 +664,13 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            temp_i = self.register_i
+
+            for index in range(0x0, x + 0x1):
+                self.registers[index] = self.ram[temp_i]
+                temp_i += 1
+
+            self.program_counter += 2
 
         sub_op_code_lookup = {
             0xF007: sub_op_code_fx07,

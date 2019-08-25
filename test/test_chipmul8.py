@@ -636,9 +636,26 @@ class TestOpCodes(unittest.TestCase):
         :rtype: None
         """
 
-        op_code = 0xF155
+        op_code = 0xFE55
         self.cpu.current_op_code = op_code
+        self.cpu.register_i = 0x300
+        self.cpu.registers[0x0] = 0xF
+        self.cpu.registers[0x1] = 0xF
         self.cpu.execute_op_code()
+
+        for index in range(0x300, 0x302):
+            self.assertEqual(0xF, self.cpu.ram[index])
+
+        self.assertEqual(0x202, self.cpu.program_counter)
+
+        for index in range(0x0, 0xF):
+            self.cpu.registers[index] = 0xFF
+
+        self.cpu.execute_op_code()
+        self.assertEqual(0x204, self.cpu.program_counter)
+
+        for index in range(0x300, 0x30F):
+            self.assertEqual(0xFF, self.cpu.ram[index])
 
     def test_op_code_f065(self):
         """
@@ -651,9 +668,19 @@ class TestOpCodes(unittest.TestCase):
         :rtype: None
         """
 
-        op_code = 0xF265
+        op_code = 0xFE65
         self.cpu.current_op_code = op_code
+        self.cpu.register_i = 0x300
+
+        for index in range(0x300, 0x30F):
+            self.cpu.ram.set_address(index, 0xFF)
+
         self.cpu.execute_op_code()
+
+        self.assertEqual(0x202, self.cpu.program_counter)
+
+        for index in range(0x0, 0xF):
+            self.assertEqual(0xFF, self.cpu.registers[index])
 
 
 if __name__ == '__main__':
