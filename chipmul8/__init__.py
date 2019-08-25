@@ -602,7 +602,10 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            # Each sprite is 5 bytes long (each sprite will use up 5 memory addresses)
+            self.register_i = self.registers[x] * 0x5
+
+            self.program_counter += 2
 
         def sub_op_code_fx33(x):
             """

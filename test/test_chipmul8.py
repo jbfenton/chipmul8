@@ -590,9 +590,12 @@ class TestOpCodes(unittest.TestCase):
         :rtype: None
         """
 
-        op_code = 0xF629
+        op_code = 0xF229
         self.cpu.current_op_code = op_code
+        self.cpu.registers[0x2] = 0x2
         self.cpu.execute_op_code()
+        self.assertEqual(0x202, self.cpu.program_counter)
+        self.assertEqual(0xA, self.cpu.register_i)
 
     def test_op_code_f033(self):
         """
