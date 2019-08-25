@@ -610,7 +610,20 @@ class TestOpCodes(unittest.TestCase):
 
         op_code = 0xF733
         self.cpu.current_op_code = op_code
+        self.cpu.registers[0x7] = 0x2
+        self.cpu.register_i = 0x300
         self.cpu.execute_op_code()
+        self.assertEqual(0x0, self.cpu.ram[0x300])
+        self.assertEqual(0x0, self.cpu.ram[0x301])
+        self.assertEqual(0x2, self.cpu.ram[0x302])
+        self.assertEqual(0x202, self.cpu.program_counter)
+
+        self.cpu.registers[0x7] = 0x111
+        self.cpu.execute_op_code()
+        self.assertEqual(0x2, self.cpu.ram[0x300])
+        self.assertEqual(0x7, self.cpu.ram[0x301])
+        self.assertEqual(0x3, self.cpu.ram[0x302])
+        self.assertEqual(0x204, self.cpu.program_counter)
 
     def test_op_code_f055(self):
         """

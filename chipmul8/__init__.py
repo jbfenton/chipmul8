@@ -12,6 +12,9 @@ class RandomAccessMemory:
         for memory_address in dumpgen(self.memory):
             print(memory_address)
 
+    def __getitem__(self, item):
+        return self.memory[item]
+
 
 class Processor:
     instruction_set = None
@@ -620,7 +623,12 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            int_string = "{0:03}".format(self.registers[x])
+
+            for index, character in enumerate(int_string):
+                self.ram.set_address(self.register_i + index, int(character))
+
+            self.program_counter += 2
 
         def sub_op_code_fx55(x):
             """
