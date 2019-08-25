@@ -1,4 +1,7 @@
+from random import Random
 from hexdump import dumpgen
+
+random = Random()
 
 
 class RandomAccessMemory:
@@ -432,7 +435,17 @@ class Processor:
         self.program_counter = (self.current_op_code & 0x0FFF) + self.registers[0x0]
 
     def opcode_c000(self):
-        pass
+        """
+        CXNN
+
+        Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN
+
+        :return: None
+        :rtype: None
+        """
+
+        self.registers[(self.current_op_code & 0x0F00) >> 8] = (self.current_op_code & 0x00FF) & random.randint(0, 255)
+        self.program_counter += 2
 
     def opcode_d000(self):
         pass

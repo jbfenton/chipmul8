@@ -1,4 +1,6 @@
 import unittest
+from random import Random
+from unittest.mock import patch
 from chipmul8 import Processor
 
 
@@ -6,6 +8,7 @@ class TestOpCodes(unittest.TestCase):
     def setUp(self) -> None:
         Processor.initialize()
         self.cpu = Processor()
+        self.random = Random(10)
 
     def test_op_code_00e0(self):
         """
@@ -431,6 +434,27 @@ class TestOpCodes(unittest.TestCase):
 
         self.assertEqual(0x204, self.cpu.program_counter)
         self.assertEqual(0xF3, self.cpu.registers[0x0])
+
+    @patch('chipmul8.random')
+    def test_op_code_c000(self, random):
+        """
+        CXNN
+
+        Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN
+
+        :return: None
+        :rtype: None
+        """
+
+        random.randint._mock_side_effect = self.random.randint
+        op_code = 0xC111
+
+        self.cpu.registers[0x1] = 0xF3
+        self.cpu.current_op_code = op_code
+        self.cpu.execute_op_code()
+
+        self.assertEqual(0x202, self.cpu.program_counter)
+        self.assertEqual(0x10, self.cpu.registers[0x1])
 
     def test_op_code_e09e(self):
         """
