@@ -298,9 +298,21 @@ class TestOpCodes(unittest.TestCase):
         :rtype: None
         """
 
-        op_code = 0x82F5
+        op_code = 0x8E25
         self.cpu.current_op_code = op_code
+        self.cpu.registers[0xE] = 0xE
+        self.cpu.registers[2] = 0x1
         self.cpu.execute_op_code()
+        self.assertEqual(0xD, self.cpu.registers[0xE])
+        self.assertEqual(0x1, self.cpu.registers[0xF])
+        self.assertEqual(0x202, self.cpu.program_counter)
+
+        self.cpu.registers[0xE] = 0x1
+        self.cpu.registers[2] = 0x2
+        self.cpu.execute_op_code()
+        self.assertEqual(-0x1, self.cpu.registers[0xE])
+        self.assertEqual(0x204, self.cpu.program_counter)
+        self.assertEqual(0x0, self.cpu.registers[0xF])
 
     def test_op_code_8006(self):
         """
@@ -314,7 +326,11 @@ class TestOpCodes(unittest.TestCase):
 
         op_code = 0x82F6
         self.cpu.current_op_code = op_code
+        self.cpu.registers[0x2] = 0x3
         self.cpu.execute_op_code()
+        self.assertEqual(0x1, self.cpu.registers[0xF])
+        self.assertEqual(0x1, self.cpu.registers[0x2])
+        self.assertEqual(0x202, self.cpu.program_counter)
 
     def test_op_code_8007(self):
         """
@@ -326,9 +342,20 @@ class TestOpCodes(unittest.TestCase):
         :rtype: None
         """
 
-        op_code = 0x82F7
+        op_code = 0x8237
         self.cpu.current_op_code = op_code
+        self.cpu.registers[0x2] = 0x4
+        self.cpu.registers[0x3] = 0x8
         self.cpu.execute_op_code()
+        self.assertEqual(0x202, self.cpu.program_counter)
+        self.assertEqual(0x4, self.cpu.registers[0x2])
+        self.assertEqual(0x1, self.cpu.registers[0xF])
+
+        self.cpu.registers[0x2] = 0x8
+        self.cpu.registers[0x3] = 0x4
+        self.cpu.execute_op_code()
+        self.assertEqual(-0x4, self.cpu.registers[0x2])
+        self.assertEqual(0x204, self.cpu.program_counter)
 
     def test_op_code_800e(self):
         """
@@ -340,9 +367,13 @@ class TestOpCodes(unittest.TestCase):
         :rtype: None
         """
 
-        op_code = 0x82FE
+        op_code = 0x823E
         self.cpu.current_op_code = op_code
+        self.cpu.registers[0x2] = 0x2
         self.cpu.execute_op_code()
+        self.assertEqual(0x202, self.cpu.program_counter)
+        self.assertEqual(0x0, self.cpu.registers[0xF])
+        self.assertEqual(0x4, self.cpu.registers[0x2])
 
     def test_op_code_9000(self):
         """

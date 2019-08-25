@@ -276,12 +276,12 @@ class Processor:
             :rtype: None
             """
 
-            self.registers[x] += self.registers[y]
-
             if self.registers[y] > (0xFF - self.registers[x]):
                 self.registers[0xF] = 1
             else:
                 self.registers[0xF] = 0
+
+            self.registers[x] += self.registers[y]
 
             self.program_counter += 2
 
@@ -299,7 +299,14 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            if self.registers[y] > self.registers[x]:
+                self.registers[0xF] = 0
+            else:
+                self.registers[0xF] = 1
+
+            self.registers[x] -= self.registers[y]
+
+            self.program_counter += 2
 
         def sub_op_code_8006(x, y):
             """
@@ -315,7 +322,10 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            self.registers[0xF] = self.registers[x] & 0x1
+            self.registers[x] >>= 0x1
+
+            self.program_counter += 2
 
         def sub_op_code_8007(x, y):
             """
@@ -331,7 +341,14 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            if self.registers[x] > self.registers[y]:
+                self.registers[0xF] = 0
+            else:
+                self.registers[0xF] = 1
+
+            self.registers[x] = self.registers[y] - self.registers[x]
+
+            self.program_counter += 2
 
         def sub_op_code_800e(x, y):
             """
@@ -347,7 +364,10 @@ class Processor:
             :rtype: None
             """
 
-            pass
+            self.registers[0xF] = self.registers[x] >> 7
+            self.registers[x] <<= 1
+
+            self.program_counter += 2
 
         sub_op_code_lookup = {
             0x8000: sub_op_code_8000,
