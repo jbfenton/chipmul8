@@ -1,14 +1,28 @@
+"""
+Chip8 interpreter unit tests
+"""
 import unittest
 from random import Random
 from unittest.mock import patch
 
-from chipmul8 import Processor
+from chipmul8 import Interpreter
 
 
 class TestOpCodes(unittest.TestCase):
+    """
+    Opcode test harness
+    """
+
     def setUp(self) -> None:
-        Processor.initialize()
-        self.cpu = Processor()
+        """
+        Initialize interpreter
+
+        :return: None
+        :rtype: None
+        """
+
+        Interpreter.initialize()
+        self.cpu = Interpreter()
         self.random = Random(10)
 
     def test_op_code_00e0(self):
@@ -182,7 +196,7 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.current_op_code = op_code
         self.cpu.registers[2] = 0x00A2
         self.cpu.execute_op_code()
-        self.assertEqual(402, self.cpu.registers[2])
+        self.assertEqual(0x92, self.cpu.registers[2])
         self.assertEqual(0x202, self.cpu.program_counter)
 
     def test_op_code_8000(self):
@@ -323,7 +337,7 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.registers[0xE] = 0x1
         self.cpu.registers[2] = 0x2
         self.cpu.execute_op_code()
-        self.assertEqual(-0x1, self.cpu.registers[0xE])
+        self.assertEqual(0xFF, self.cpu.registers[0xE])
         self.assertEqual(0x204, self.cpu.program_counter)
         self.assertEqual(0x0, self.cpu.registers[0xF])
 
@@ -367,7 +381,7 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.registers[0x2] = 0x8
         self.cpu.registers[0x3] = 0x4
         self.cpu.execute_op_code()
-        self.assertEqual(-0x4, self.cpu.registers[0x2])
+        self.assertEqual(0xFC, self.cpu.registers[0x2])
         self.assertEqual(0x204, self.cpu.program_counter)
 
     def test_op_code_800e(self):
@@ -505,7 +519,6 @@ class TestOpCodes(unittest.TestCase):
         ]
 
         for coordinate_x, coordinate_y in sprite_coordinates:
-            print(coordinate_x, coordinate_y)
             self.assertEqual(0x1, self.cpu.display_memory[coordinate_y, coordinate_x])
 
         self.assertEqual(0x202, self.cpu.program_counter)
@@ -653,8 +666,8 @@ class TestOpCodes(unittest.TestCase):
 
         self.cpu.registers[0x5] = 0xFFF
         self.cpu.execute_op_code()
-        self.assertEqual(0x1001, self.cpu.register_i)
-        self.assertEqual(0x1, self.cpu.registers[0xF])
+        self.assertEqual(0x101, self.cpu.register_i)
+        self.assertEqual(0x0, self.cpu.registers[0xF])
         self.assertEqual(0x0204, self.cpu.program_counter)
 
     def test_op_code_f029(self):
@@ -698,9 +711,9 @@ class TestOpCodes(unittest.TestCase):
 
         self.cpu.registers[0x7] = 0x111
         self.cpu.execute_op_code()
-        self.assertEqual(0x2, self.cpu.ram[0x300])
-        self.assertEqual(0x7, self.cpu.ram[0x301])
-        self.assertEqual(0x3, self.cpu.ram[0x302])
+        self.assertEqual(0x0, self.cpu.ram[0x300])
+        self.assertEqual(0x1, self.cpu.ram[0x301])
+        self.assertEqual(0x7, self.cpu.ram[0x302])
         self.assertEqual(0x204, self.cpu.program_counter)
 
     def test_op_code_f055(self):

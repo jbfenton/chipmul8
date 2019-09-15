@@ -3,37 +3,137 @@ from random import Random
 import numpy as np
 from hexdump import dumpgen
 
+
 random = Random()
 
+font_list = [
+    0xF0, 0x90, 0x90, 0x90, 0xF0,
+    0x20, 0x60, 0x20, 0x20, 0x70,
+    0xF0, 0x10, 0xF0, 0x80, 0xF0,
+    0xF0, 0x10, 0xF0, 0x10, 0xF0,
+    0x90, 0x90, 0xF0, 0x10, 0x10,
+    0xF0, 0x80, 0xF0, 0x10, 0xF0,
+    0xF0, 0x80, 0xF0, 0x90, 0xF0,
+    0xF0, 0x10, 0x20, 0x40, 0x40,
+    0xF0, 0x90, 0xF0, 0x90, 0xF0,
+    0xF0, 0x90, 0xF0, 0x10, 0xF0,
+    0xF0, 0x90, 0xF0, 0x90, 0x90,
+    0xE0, 0x90, 0xE0, 0x90, 0xE0,
+    0xF0, 0x80, 0x80, 0x80, 0xF0,
+    0xE0, 0x90, 0x90, 0x90, 0xE0,
+    0xF0, 0x80, 0xF0, 0x80, 0xF0,
+    0xF0, 0x80, 0xF0, 0x80, 0x80
+]
 
-class RandomAccessMemory:
-    def __init__(self, allocated_memory=4096):
+
+class MemoryBase:
+    """
+    Generic memory object
+    """
+
+    def __init__(self, allocated_memory):
+        """
+        :param allocated_memory: Number o bytes of memory to allocate
+        :type allocated_memory: int
+        """
+
         self.memory = bytearray(allocated_memory)
 
-    def set_address(self, address, value):
-        self.memory[address] = value
-
     def dump(self):
+        """
+        Display a memory hexdump
+
+        :return: None
+        :rtype: None
+        """
+
         for memory_address in dumpgen(self.memory):
             print(memory_address)
 
+    @staticmethod
+    def wrap_integer(number):
+        """
+        C-style integer wrapping to fit into integers into an unsigned char
+
+        :param number: Integer to wrap
+        :type number: int
+        :return: Wrapped integer
+        :rtype: int
+        """
+
+        return number % 256
+
+    def set_address(self, address, value):
+        """
+        Sets the memory address to the provided value
+
+        :param address: Address to set
+        :type address: int
+        :param value: Value to assign
+        :type value: int
+        :return: None
+        :rtype: None
+        """
+
+        self.memory[address] = self.wrap_integer(value)
+
+    def __setitem__(self, key, value):
+        """
+        Sets the memory address to the provided value
+
+        :param key: Address to set
+        :type key: int
+        :param value: Value to assign
+        :type value: int
+        :return: None
+        :rtype: None
+        """
+
+        self.memory[key] = self.wrap_integer(value)
+
     def __getitem__(self, item):
+        """
+        Retrieve the value of memory at the provided address
+
+        :param item: Memory address
+        :type item: int
+        :return: Memory value for provided address
+        :rtype: int
+        """
+
         return self.memory[item]
 
 
-class Processor:
+class Interpreter:
+    """
+    Chip8 Interpreter
+    """
+
     instruction_set = None
 
     @classmethod
     def initialize(cls):
+        """
+        Loads op codes
+
+        :return: None
+        :rtype: None
+        """
+
         cls.instruction_set = {
             op_code_lookup[7:]: op_code_lookup
             for op_code_lookup in cls.__dict__ if str(op_code_lookup).startswith('opcode_')
         }
 
     def __init__(self, start_address=0x200):
-        self.ram = RandomAccessMemory()
-        self.registers = [0] * 16
+        """
+        :param start_address: Interpreter memory start location
+        :type start_address: int
+        """
+
+        self.ram = MemoryBase(4096)
+        self.registers = MemoryBase(16)
+
         self.stack = [0] * 16
         self.register_i = 0
         self.program_counter = start_address
@@ -47,13 +147,57 @@ class Processor:
         self.display_memory = np.zeros(shape=(32, 64), dtype=np.int8)
 
         self.keyboard = [False] * 16
+        self.frame_ready = False
+
+        for index, font_item in enumerate(font_list):
+            self.ram.set_address(index, font_item)
+
+    def load_rom(self, rom_path):
+        """
+        Loads a rom into memory
+
+        :param rom_path: Path to rom file
+        :type rom_path: str
+        :return: None
+        :rtype: None
+        """
+
+        with open(rom_path, 'rb') as rom_file:
+            for index, line in enumerate(rom_file.read()):
+                self.ram.set_address(0x200 + index, line)
+
+    def emulate(self):
+        """
+        Executes one emulation cycle of the interpreter
+
+        :return: None
+        :rtype: None
+        """
+
+        self.current_op_code = self.ram[self.program_counter] << 8 | self.ram[self.program_counter + 1]
+        self.execute_op_code()
+
+        if self.delay_register > 0:
+            self.delay_register -= 1
+
+        if self.sound_register > 0:
+            self.sound_register -= 1
 
     def execute_op_code(self):
-        lookup_code = hex(self.current_op_code & 0xF000)[2:]
-        print(f"Executing opcode: {hex(self.current_op_code)}")
-        print(f"Executing opcode (lookup): {lookup_code}")
+        """
+        Executes the current opcode
 
-        getattr(self, self.instruction_set[lookup_code])()
+        :return: None
+        :rtype: None
+        """
+
+        lookup_code = hex(self.current_op_code & 0xF000)[2:]
+
+        try:
+            getattr(self, self.instruction_set[lookup_code])()
+        except Exception as e:
+            print(f"Executing opcode: {hex(self.current_op_code)}")
+            print(e)
 
     def opcode_0(self):
         """
@@ -96,8 +240,6 @@ class Processor:
         }
 
         sub_op_code = sub_op_code_lookup[(self.current_op_code & 0x00FF)]
-        print(f"Executing: {sub_op_code.__name__}")
-
         sub_op_code()
 
     def opcode_1000(self):
@@ -182,6 +324,7 @@ class Processor:
         """
 
         self.registers[(self.current_op_code & 0x0F00) >> 8] = self.current_op_code & 0x00FF
+
         self.program_counter += 2
 
     def opcode_7000(self):
@@ -194,7 +337,10 @@ class Processor:
         :rtype: None
         """
 
-        self.registers[(self.current_op_code & 0x0F00) >> 8] += self.current_op_code & 0x00FF
+        register_address = (self.current_op_code & 0x0F00) >> 8
+
+        self.registers[register_address] = self.registers[register_address] + self.current_op_code & 0x00FF
+
         self.program_counter += 2
 
     def opcode_8000(self):
@@ -292,7 +438,7 @@ class Processor:
             else:
                 self.registers[0xF] = 0
 
-            self.registers[x] += self.registers[y]
+            self.registers[x] = self.registers[x] + self.registers[y]
 
             self.program_counter += 2
 
@@ -315,7 +461,7 @@ class Processor:
             else:
                 self.registers[0xF] = 1
 
-            self.registers[x] -= self.registers[y]
+            self.registers[x] = self.registers[x] - self.registers[y]
 
             self.program_counter += 2
 
@@ -333,6 +479,7 @@ class Processor:
             :rtype: None
             """
 
+            _ = y
             self.registers[0xF] = self.registers[x] & 0x1
             self.registers[x] >>= 0x1
 
@@ -375,6 +522,7 @@ class Processor:
             :rtype: None
             """
 
+            _ = y
             self.registers[0xF] = self.registers[x] >> 7
             self.registers[x] <<= 1
 
@@ -396,7 +544,6 @@ class Processor:
         y_value = (self.current_op_code & 0x00F0) >> 4
 
         sub_op_code = sub_op_code_lookup[(self.current_op_code & 0xF00F)]
-        print(f"Executing: {sub_op_code.__name__}")
 
         sub_op_code(x_value, y_value)
 
@@ -479,10 +626,17 @@ class Processor:
                 if int(bit) == 0x1:
                     x = x_sprite_coordinate + x_coordinate
                     y = y_sprite_coordinate + y_coordinate
-                    if self.display_memory[y, x] == 1:
-                        self.registers[0xF] = 1
-                    self.display_memory[y, x] = 1
 
+                    try:
+                        if self.display_memory[y, x] == 0:
+                            self.registers[0xF] = 1
+
+                        self.display_memory[y, x] ^= 1
+                    except Exception as e:
+                        print(self.registers)
+                        exit()
+
+        self.frame_ready = True
         self.program_counter += 2
 
     def opcode_e000(self):
@@ -534,8 +688,6 @@ class Processor:
 
         sub_op_code = sub_op_code_lookup[(self.current_op_code & 0xF0FF)]
         x_value = (self.current_op_code & 0x0F00) >> 8
-
-        print(f"Executing: {sub_op_code.__name__}")
 
         sub_op_code(x_value)
 
@@ -735,11 +887,4 @@ class Processor:
         sub_op_code = sub_op_code_lookup[(self.current_op_code & 0xF0FF)]
         x_value = (self.current_op_code & 0x0F00) >> 8
 
-        print(f"Executing: {sub_op_code.__name__}")
-
         sub_op_code(x_value)
-
-
-if __name__ == '__main__':
-    Processor.initialize()
-    cpu = Processor()
