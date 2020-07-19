@@ -2,14 +2,13 @@
 Emulator game engine.
 """
 
-import sys
 from pathlib import Path
 
 import pygame
 from OpenGL.GL import glClearColor, glClear, glDrawPixels, GL_RGB, GL_UNSIGNED_BYTE, GL_COLOR_BUFFER_BIT
 from pygame.locals import (K_1, K_2, K_3, K_4, K_q, K_w, K_e, K_r, K_a, K_s, K_d, K_f, K_z, K_x, K_c, K_v)
 
-from chipmul8.interpreter import Interpreter
+from chipmul8.emulator.interpreter import Interpreter
 
 keymap = {
     # 1 2 3 4 => 1 2 3 C
@@ -25,22 +24,28 @@ keymap = {
 
 
 class GameEngine:
-    def __init__(self, rom_path):
+    def __init__(self, rom_file, invert_colors=False):
         """
         Initialise the game engine.
 
-        :param rom_path: Path to the rom file.
-        :type rom_path: Path
+        :param rom_file: Rom file.
+        :type rom_file: _io.BufferedReader
+        :param invert_colors: Invert display color flag
+        :type invert_colors: bool
         """
 
         self.display_width = 64
         self.display_height = 32
         self.pixel_size = 10
 
+        self._invert_colors = invert_colors
+
         Interpreter.initialize()
         self.cpu = Interpreter()
 
-        self.cpu.load_rom(rom_path=rom_path)
+        rom_path = Path(rom_file.name)
+
+        self.cpu.load_rom(rom_file)
 
         self.rom_name = rom_path.name[:len(rom_path.suffix) + 2]
 
@@ -80,6 +85,21 @@ class GameEngine:
 
         self.clock = pygame.time.Clock()
 
+    def _pixel_color(self, value):
+        """
+        Determine pixel color.
+
+        :param value: Interpreter display pixel (1 if filled, 0 is not filled).
+        :type value: int
+        :return: Pixel color value.
+        :rtype: int
+        """
+
+        if self._invert_colors:
+            return 255 if value == 1 else 0
+        else:
+            return 0 if value == 1 else 255
+
     def draw(self):
         """
         Render interpreter display buffer to the game screen.
@@ -94,7 +114,7 @@ class GameEngine:
                 g = r + 1
                 b = r + 2
 
-                pixel_color = 0 if value == 1 else 255
+                pixel_color = self._pixel_color(value)
 
                 self.temp_display[r] = pixel_color
                 self.temp_display[g] = pixel_color
@@ -141,7 +161,7 @@ class GameEngine:
                 if event.type == pygame.QUIT:
                     pygame.display.quit()
                     pygame.quit()
-                    sys.exit()
+                    return
                 elif event.type == pygame.VIDEORESIZE:
                     print(event.size)
                 elif event.type == pygame.KEYDOWN:
