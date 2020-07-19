@@ -7,9 +7,21 @@ from pathlib import Path
 
 import pygame
 from OpenGL.GL import glClearColor, glClear, glDrawPixels, GL_RGB, GL_UNSIGNED_BYTE, GL_COLOR_BUFFER_BIT
-from pygame.locals import K_d
+from pygame.locals import (K_1, K_2, K_3, K_4, K_q, K_w, K_e, K_r, K_a, K_s, K_d, K_f, K_z, K_x, K_c, K_v)
 
 from chipmul8.interpreter import Interpreter
+
+keymap = {
+    # 1 2 3 4 => 1 2 3 C
+    # q w e r => 4 5 6 D
+    # a s d f => 7 8 9 E
+    # z x c v => A 0 B F
+
+    K_1: 1,  K_2: 2, K_3: 3,  K_4: 13,
+    K_q: 4,  K_w: 5, K_e: 6,  K_r: 14,
+    K_a: 7,  K_s: 8, K_d: 9,  K_f: 15,
+    K_z: 11, K_x: 0, K_c: 12, K_v: 16
+}
 
 
 class GameEngine:
@@ -107,10 +119,8 @@ class GameEngine:
         :rtype: None
         """
 
-        print("Key", key, type(key))
-
-        if key == K_d:
-            self.cpu.keyboard[5] = down
+        if key in keymap:
+            self.cpu.keyboard[keymap[key]] = down
 
     def start(self):
         """
