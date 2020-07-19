@@ -5,7 +5,7 @@ import unittest
 from random import Random
 from unittest.mock import patch
 
-from chipmul8 import Interpreter
+from chipmul8.interpreter import Interpreter
 
 
 class TestOpCodes(unittest.TestCase):
@@ -459,7 +459,7 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x204, self.cpu.program_counter)
         self.assertEqual(0xF3, self.cpu.registers[0x0])
 
-    @patch('chipmul8.random')
+    @patch('chipmul8.interpreter.random')
     def test_op_code_c000(self, random):
         """
         CXNN
