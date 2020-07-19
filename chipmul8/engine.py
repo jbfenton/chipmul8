@@ -17,10 +17,10 @@ keymap = {
     # a s d f => 7 8 9 E
     # z x c v => A 0 B F
 
-    K_1: 1,  K_2: 2, K_3: 3,  K_4: 13,
-    K_q: 4,  K_w: 5, K_e: 6,  K_r: 14,
-    K_a: 7,  K_s: 8, K_d: 9,  K_f: 15,
-    K_z: 11, K_x: 0, K_c: 12, K_v: 16
+    K_1: 1,  K_2: 2, K_3: 3,  K_4: 12,
+    K_q: 4,  K_w: 5, K_e: 6,  K_r: 13,
+    K_a: 7,  K_s: 8, K_d: 9,  K_f: 14,
+    K_z: 10, K_x: 0, K_c: 11, K_v: 15
 }
 
 
@@ -105,7 +105,6 @@ class GameEngine:
             pygame.display.flip()
 
             self.cpu.frame_ready = False
-            self.cpu.temp = []
 
     def _key(self, key, down=True):
         """

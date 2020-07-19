@@ -149,7 +149,7 @@ class Interpreter:
 
         self.display_memory = np.zeros(shape=(32, 64), dtype=np.int8)
 
-        self.keyboard = [False] * 17
+        self.keyboard = [False] * 16
         self.frame_ready = False
 
         for index, font_item in enumerate(font_list):
