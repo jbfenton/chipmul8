@@ -632,10 +632,10 @@ class Interpreter:
                     y = y_sprite_coordinate + y_coordinate
 
                     try:
-                        if self.display_memory[y, x] == 0:
+                        if self.display_memory[y, -x - 1] == 0:
                             self.registers[0xF] = 1
 
-                        self.display_memory[y, x] ^= 1
+                        self.display_memory[y, -x - 1] ^= 1
                     except Exception:
                         print(self.registers)
                         exit()
