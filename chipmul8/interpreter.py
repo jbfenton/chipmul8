@@ -160,7 +160,7 @@ class Interpreter:
         Loads a rom into memory.
 
         :param rom_path: Path to rom file.
-        :type rom_path: str
+        :type rom_path: str | Path
         :return: None
         :rtype: None
         """
