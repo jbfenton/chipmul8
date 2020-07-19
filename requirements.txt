@@ -1,0 +1,5 @@
+pygame~=1.9.6
+click~=7.1.2
+numpy~=1.18.1
+hexdump~=3.3
+setuptools~=40.8.0

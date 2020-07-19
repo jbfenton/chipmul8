@@ -1,11 +1,12 @@
 """
 Chip8 interpreter unit tests
 """
+
 import unittest
 from random import Random
 from unittest.mock import patch
 
-from chipmul8.interpreter import Interpreter
+from chipmul8.emulator.interpreter import Interpreter
 
 
 class TestOpCodes(unittest.TestCase):
@@ -459,7 +460,7 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x204, self.cpu.program_counter)
         self.assertEqual(0xF3, self.cpu.registers[0x0])
 
-    @patch('chipmul8.interpreter.random')
+    @patch('chipmul8.emulator.interpreter.random')
     def test_op_code_c000(self, random):
         """
         CXNN
@@ -519,7 +520,7 @@ class TestOpCodes(unittest.TestCase):
         ]
 
         for coordinate_x, coordinate_y in sprite_coordinates:
-            self.assertEqual(0x1, self.cpu.display_memory[coordinate_y, coordinate_x])
+            self.assertEqual(0x1, self.cpu.display_memory[coordinate_y, -coordinate_x - 1])
 
         self.assertEqual(0x202, self.cpu.program_counter)
 

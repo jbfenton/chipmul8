@@ -155,19 +155,18 @@ class Interpreter:
         for index, font_item in enumerate(font_list):
             self.ram.set_address(index, font_item)
 
-    def load_rom(self, rom_path):
+    def load_rom(self, rom_file):
         """
         Loads a rom into memory.
 
-        :param rom_path: Path to rom file.
-        :type rom_path: str | Path
+        :param rom_file: Rom file.
+        :type rom_file: _io.BufferedReader
         :return: None
         :rtype: None
         """
 
-        with open(rom_path, 'rb') as rom_file:
-            for index, line in enumerate(rom_file.read()):
-                self.ram.set_address(0x200 + index, line)
+        for index, line in enumerate(rom_file.read()):
+            self.ram.set_address(0x200 + index, line)
 
     def emulate(self):
         """
