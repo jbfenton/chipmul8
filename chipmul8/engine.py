@@ -42,6 +42,8 @@ class GameEngine:
 
         self.cpu.load_rom(rom_path=rom_path)
 
+        self.rom_name = rom_path.name[:len(rom_path.suffix) + 2]
+
         self.window = None
         self.clock = None
         self.started = False
@@ -73,6 +75,8 @@ class GameEngine:
             (self.display_width, self.display_height),
             pygame.DOUBLEBUF | pygame.OPENGL | pygame.RESIZABLE
         )
+
+        pygame.display.set_caption(self.rom_name)
 
         self.clock = pygame.time.Clock()
 
