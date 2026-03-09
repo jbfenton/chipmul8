@@ -8,15 +8,15 @@
 
 This project aims to replicate the CHIP-8 interpreter using Python, in the hopes that we can play Pong as it ran on the CHIP-8 virtual machine in the 1970's.
 
-## Installation
-1. Download / clone the repo
-2. Navigate to the chipmul8 directory
-3. Run setup.py:
+# Installation
 
-   ```$ python setup.py install``` 
+## Developer Installation
+1. Download / clone the repo
+2. In the root of the repository run: ```make bootstrap```
+   - This will create a virtual environment and install the required dependencies for the project.
 
 ## Execution
-1. Run the 'chipmul8' command while providing a path to a chip8 rom:
+1. Run the `chipmul8` command while providing a path to a chip8 rom:
     
     ```$ chipmul8 /path/to/rom/pong.c8```
     
