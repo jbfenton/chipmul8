@@ -1,0 +1,115 @@
+[project]
+description = "A simple CHIP-8 emulator written in Python."
+name = "chipmul8"
+readme = "README.md"
+requires-python = ">=3.11.4"
+version = "0.1.0"
+
+dependencies = [
+    "click>=8.3.1",
+    "numpy>=2.4.3",
+    "pygame>=2.6.1",
+]
+
+[build-system]
+build-backend = "hatchling.build"
+
+requires = [
+    "hatchling"
+]
+
+[dependency-groups]
+dev = [
+    "coverage>=7.13.4",
+    "mypy>=1.19.1",
+    "ruff>=0.15.5",
+    "types-setuptools>=82.0.0.20260210",
+]
+
+[tool.mypy]
+python_version = "3.11"
+show_error_codes = true
+strict = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+enable_error_code = [
+    "ignore-without-code",
+    "redundant-cast",
+    "truthy-bool"
+]
+
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
+
+module = [
+    "OpenGL.*",
+    "pygame.*",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+lint.ignore = [
+    "COM812",   # trailing comma — conflicts with ruff formatter
+    "ISC001",   # implicit string concat — conflicts with ruff formatter
+
+    # TODO: pre-existing violations — fix and remove these ignores
+    "ANN001",   # missing type annotation for function argument (5 violations)
+    "ANN201",   # missing return type annotation for public function (2 violations)
+    "ANN204",   # missing return type annotation for special method (2 violations)
+    "BLE001",   # do not catch blind exception (3 violations)
+    "C901",     # function too complex (2 violations)
+    "D101",     # missing docstring in public class (1 violation)
+    "D104",     # missing docstring in public package (1 violation)
+    "D205",     # blank line required between summary and description (1 violation)
+    "FBT001",   # boolean positional arg in function definition (2 violations)
+    "FBT002",   # boolean default positional arg in function definition (2 violations)
+    "FURB116",  # replace hex() with f-string (1 violation)
+    "PLC0415",  # import not at top-level (1 violation)
+    "PLR0915",  # too many statements (2 violations)
+    "PLR2004",  # magic value in comparison (1 violation)
+    "PTH123",   # open() should use Path.open() (1 violation)
+    "S311",     # standard pseudo-random generator (2 violations)
+    "T201",     # print found (4 violations)
+    "D200",     # one-line docstring should fit on one line (7 violations)
+    "D400",     # first line should end with a period (38 violations)
+    "D401",     # first line should be imperative mood (6 violations)
+    "PLR1722",  # use sys.exit() instead of exit (1 violation)
+]
+lint.isort.known-first-party = [
+    "chipmul8"
+]
+lint.pydocstyle.convention = "pep257"
+lint.select = [
+    "ALL"
+]
+src = [
+    "src",
+    "test"
+]
+
+[tool.ruff.lint.per-file-ignores]
+"test/**/*.py" = [
+    "ANN",     # no annotation requirements in tests
+    "D",       # no docstring requirements in tests
+    "PLR2004", # magic values allowed in tests
+    "S101",    # assert allowed in tests
+    # TODO: pre-existing violations — fix and remove these ignores
+    "B007",    # unused loop variable (2 violations)
+    "PIE808",  # unnecessary range start arg (2 violations)
+    "PT009",   # use pytest.raises instead of unittest-style (94 violations)
+    "SLF001",  # private member access (1 violation)
+]
+"setup.py" = [
+    "D",       # no docstring requirements in setup.py
+    "INP001",  # implicit namespace package
+]
+"src/**/*.py" = [
+    # TODO: pre-existing violations — fix and remove these ignores
+    "PIE808",  # unnecessary range start arg (3 violations)
+    "RET505",  # unnecessary elif after return (1 violation)
+]
