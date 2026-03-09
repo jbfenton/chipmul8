@@ -1,5 +1,5 @@
 """
-Chip8 interpreter unit tests
+Chip8 interpreter unit tests.
 """
 
 import unittest
@@ -11,29 +11,27 @@ from chipmul8.emulator.interpreter import Interpreter
 
 class TestOpCodes(unittest.TestCase):
     """
-    Opcode test harness
+    Opcode test harness.
     """
 
     def setUp(self) -> None:
         """
-        Initialize interpreter
+        Initialize interpreter.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         Interpreter.initialize()
         self.cpu = Interpreter()
         self.random = Random(10)
 
-    def test_op_code_00e0(self):
+    def test_op_code_00e0(self) -> None:
         """
         00E0
 
-        Clears the screen
+        Clears the screen.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x00E0
@@ -49,14 +47,13 @@ class TestOpCodes(unittest.TestCase):
             for x_index, pixel in enumerate(row):
                 self.assertEqual(0x0, self.cpu.display_memory[y_index][x_index])
 
-    def test_op_code_00ee(self):
+    def test_op_code_00ee(self) -> None:
         """
         00EE
 
-        Return from subroutine
+        Return from subroutine.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         # execute a subroutine
@@ -70,14 +67,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0, self.cpu.stack_pointer)
         self.assertEqual(0x202, self.cpu.program_counter)
 
-    def test_op_code_1000(self):
+    def test_op_code_1000(self) -> None:
         """
         1NNN
 
         goto NNN;
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x12F0
@@ -85,14 +81,13 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.execute_op_code()
         self.assertEqual(op_code & 0x0FFF, self.cpu.program_counter)
 
-    def test_op_code_2000(self):
+    def test_op_code_2000(self) -> None:
         """
         2NNN
 
-        Calls subroutine at NNN
+        Calls subroutine at NNN.
 
-        :return:
-        :rtype:
+        :return: None.
         """
 
         op_code = 0x22F0
@@ -103,14 +98,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x200, self.cpu.stack[0])
         self.assertEqual(0x02F0, self.cpu.program_counter)
 
-    def test_op_code_3000(self):
+    def test_op_code_3000(self) -> None:
         """
         3XNN
 
-        Skips the next instruction if VX equals NN
+        Skips the next instruction if VX equals NN.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x32F0
@@ -124,14 +118,13 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.execute_op_code()
         self.assertEqual(0x0206, self.cpu.program_counter)
 
-    def test_op_code_4000(self):
+    def test_op_code_4000(self) -> None:
         """
         4XNN
 
-        Skips the next instruction if VX does not equal NN
+        Skips the next instruction if VX does not equal NN.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x42F0
@@ -145,14 +138,13 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.execute_op_code()
         self.assertEqual(0x0206, self.cpu.program_counter)
 
-    def test_op_code_5000(self):
+    def test_op_code_5000(self) -> None:
         """
         5XY0
 
-        Skips the next instruction if VX equals VY
+        Skips the next instruction if VX equals VY.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x5230
@@ -167,14 +159,13 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.execute_op_code()
         self.assertEqual(0x206, self.cpu.program_counter)
 
-    def test_op_code_6000(self):
+    def test_op_code_6000(self) -> None:
         """
         6XNN
 
-        Sets VX to NN
+        Sets VX to NN.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x62F0
@@ -183,14 +174,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(op_code & 0x00FF, self.cpu.registers[2])
         self.assertEqual(0x202, self.cpu.program_counter)
 
-    def test_op_code_7000(self):
+    def test_op_code_7000(self) -> None:
         """
         7XNN
 
-        Adds NN to VX. (Carry flag is not changed)
+        Adds NN to VX. (Carry flag is not changed).
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x72F0
@@ -200,14 +190,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x92, self.cpu.registers[2])
         self.assertEqual(0x202, self.cpu.program_counter)
 
-    def test_op_code_8000(self):
+    def test_op_code_8000(self) -> None:
         """
         8XY0
 
-        Sets VX to the value of VY
+        Sets VX to the value of VY.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x8230
@@ -230,14 +219,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x204, self.cpu.program_counter)
         self.assertEqual(0xF0, self.cpu.registers[2])
 
-    def test_op_code_8001(self):
+    def test_op_code_8001(self) -> None:
         """
         8XY1
 
-        Sets VX to VX or VY
+        Sets VX to VX or VY.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x82F1
@@ -250,14 +238,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x202, self.cpu.program_counter)
         self.assertEqual(0x33, self.cpu.registers[0x2])
 
-    def test_op_code_8002(self):
+    def test_op_code_8002(self) -> None:
         """
         8XY2
 
-        Sets VX to VX and VY
+        Sets VX to VX and VY.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x85F2
@@ -270,14 +257,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x202, self.cpu.program_counter)
         self.assertEqual(0x1, self.cpu.registers[0x5])
 
-    def test_op_code_8003(self):
+    def test_op_code_8003(self) -> None:
         """
         8XY3
 
-        Sets VX to VX xor VY
+        Sets VX to VX xor VY.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x85F3
@@ -290,14 +276,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x202, self.cpu.program_counter)
         self.assertEqual(0xF2, self.cpu.registers[0x5])
 
-    def test_op_code_8004(self):
+    def test_op_code_8004(self) -> None:
         """
         8XY4
 
-        Adds VY to VX. VF is set to 1 when there is a carry, and to 0 when there isn't
+        Adds VY to VX. VF is set to 1 when there is a carry, and to 0 when there isn't.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x8234
@@ -316,14 +301,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x1, self.cpu.registers[0xF])
         self.assertEqual(0x204, self.cpu.program_counter)
 
-    def test_op_code_8005(self):
+    def test_op_code_8005(self) -> None:
         """
         8XY5
 
-        VY is subtracted from VX. VF is set to 0 when there is a borrow, and to 0 where there isn't
+        VY is subtracted from VX. VF is set to 0 when there is a borrow, and to 0 where there isn't.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x8E25
@@ -342,14 +326,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x204, self.cpu.program_counter)
         self.assertEqual(0x0, self.cpu.registers[0xF])
 
-    def test_op_code_8006(self):
+    def test_op_code_8006(self) -> None:
         """
         8XY6
 
-        Stores the least significant bit of VX in VF and then shifts VX to the right by 1
+        Stores the least significant bit of VX in VF and then shifts VX to the right by 1.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x82F6
@@ -360,14 +343,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x1, self.cpu.registers[0x2])
         self.assertEqual(0x202, self.cpu.program_counter)
 
-    def test_op_code_8007(self):
+    def test_op_code_8007(self) -> None:
         """
         8XY7
 
-        Sets VX to VY minus VX. VF is set to 0 when there is a borrow, and 1 when there isn't
+        Sets VX to VY minus VX. VF is set to 0 when there is a borrow, and 1 when there isn't.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x8237
@@ -385,14 +367,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0xFC, self.cpu.registers[0x2])
         self.assertEqual(0x204, self.cpu.program_counter)
 
-    def test_op_code_800e(self):
+    def test_op_code_800e(self) -> None:
         """
         8XYE
 
-        Stores the most significant bit of VX in VF and then shifts VX to the left by 1
+        Stores the most significant bit of VX in VF and then shifts VX to the left by 1.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0x823E
@@ -403,14 +384,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x0, self.cpu.registers[0xF])
         self.assertEqual(0x4, self.cpu.registers[0x2])
 
-    def test_op_code_9000(self):
+    def test_op_code_9000(self) -> None:
         """
         9XY0
 
-        Skips the next instruction if VX doesn't equal VY
+        Skips the next instruction if VX doesn't equal VY.
 
-        :return:
-        :rtype:
+        :return: None.
         """
 
         op_code = 0x9230
@@ -425,14 +405,13 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.execute_op_code()
         self.assertEqual(0x206, self.cpu.program_counter)
 
-    def test_op_code_a000(self):
+    def test_op_code_a000(self) -> None:
         """
         ANNN
 
         Sets I to the address NNN.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0xA2F0
@@ -441,14 +420,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(op_code & 0x0FFF, self.cpu.register_i)
         self.assertEqual(0x202, self.cpu.program_counter)
 
-    def test_op_code_b000(self):
+    def test_op_code_b000(self) -> None:
         """
         BNNN
 
-        Jumps to the address NNN plus V0
+        Jumps to the address NNN plus V0.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0xB111
@@ -460,15 +438,14 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x204, self.cpu.program_counter)
         self.assertEqual(0xF3, self.cpu.registers[0x0])
 
-    @patch('chipmul8.emulator.interpreter.random')
+    @patch("chipmul8.emulator.interpreter.random")
     def test_op_code_c000(self, random):
         """
         CXNN
 
-        Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN
+        Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         random.randint._mock_side_effect = self.random.randint
@@ -481,18 +458,20 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x202, self.cpu.program_counter)
         self.assertEqual(0x10, self.cpu.registers[0x1])
 
-    def test_op_code_d000(self):
+    def test_op_code_d000(self) -> None:
         """
         DXYN
 
         Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a height of N pixels.
-        Each row of 8 pixels is read as bit-coded starting from memory location I;
-        I value does not change after the execution of this instruction.
-        As described above, VF is set to 1 if any screen pixels are flipped from set to unset when the sprite is drawn,
-        and to 0 if that does not happen
 
-        :return: None
-        :rtype: None
+        Each row of 8 pixels is read as bit-coded starting from memory location I;
+
+        I value does not change after the execution of this instruction.
+
+        As described above, VF is set to 1 if any screen pixels are flipped from set to unset when the sprite is drawn,
+        and to 0 if that does not happen.
+
+        :return: None.
         """
 
         op_code = 0xD004
@@ -524,14 +503,13 @@ class TestOpCodes(unittest.TestCase):
 
         self.assertEqual(0x202, self.cpu.program_counter)
 
-    def test_op_code_e09e(self):
+    def test_op_code_e09e(self) -> None:
         """
         EX9E
 
-        Skips the next instruction if the key stored in VX is pressed
+        Skips the next instruction if the key stored in VX is pressed.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0xE19E
@@ -547,14 +525,13 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.execute_op_code()
         self.assertEqual(0x206, self.cpu.program_counter)
 
-    def test_op_code_e0a1(self):
+    def test_op_code_e0a1(self) -> None:
         """
         EXA1
 
-        Skips the next instruction if the key stored in VX isn't pressed
+        Skips the next instruction if the key stored in VX isn't pressed.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0xE5A1
@@ -572,14 +549,13 @@ class TestOpCodes(unittest.TestCase):
         self.cpu.execute_op_code()
         self.assertEqual(0x206, self.cpu.program_counter)
 
-    def test_op_code_f007(self):
+    def test_op_code_f007(self) -> None:
         """
         FX07
 
-        Sets VX to the value of the delay timer
+        Sets VX to the value of the delay timer.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0xF107
@@ -589,14 +565,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0xF, self.cpu.registers[0x1])
         self.assertEqual(0x202, self.cpu.program_counter)
 
-    def test_op_code_f00a(self):
+    def test_op_code_f00a(self) -> None:
         """
         FX0A
 
         A key press is awaited, and then stored in VX (Blocking operation)
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0xF20A
@@ -605,19 +580,18 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x200, self.cpu.program_counter)
 
         # Simulate a key press
-        self.cpu.keyboard[0xf] = True
+        self.cpu.keyboard[0xF] = True
         self.cpu.execute_op_code()
         self.assertEqual(0x202, self.cpu.program_counter)
         self.assertEqual(0xF, self.cpu.registers[0x2])
 
-    def test_op_code_f015(self):
+    def test_op_code_f015(self) -> None:
         """
         FX15
 
         Sets the delay timer to VX
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0xF315
@@ -627,14 +601,13 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0xF, self.cpu.delay_register)
         self.assertEqual(0x202, self.cpu.program_counter)
 
-    def test_op_code_f018(self):
+    def test_op_code_f018(self) -> None:
         """
         FX18
 
         Sets the sound timer to VX
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0xF418
@@ -644,7 +617,7 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0xF, self.cpu.sound_register)
         self.assertEqual(0x202, self.cpu.program_counter)
 
-    def test_op_code_f01e(self):
+    def test_op_code_f01e(self) -> None:
         """
         FX1E
 
@@ -652,8 +625,7 @@ class TestOpCodes(unittest.TestCase):
 
         VF is set to 1 when there is a range overflow (I + VX > 0xFFF), and to 0 when there isn't.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0xF51E
@@ -671,15 +643,14 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x0, self.cpu.registers[0xF])
         self.assertEqual(0x0204, self.cpu.program_counter)
 
-    def test_op_code_f029(self):
+    def test_op_code_f029(self) -> None:
         """
         FX29
 
         Sets I to the location of the sprite for the character in VX
         Characters 0-F (in hexadecimal) are represented by a 4x5 font
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0xF229
@@ -689,15 +660,14 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x202, self.cpu.program_counter)
         self.assertEqual(0xA, self.cpu.register_i)
 
-    def test_op_code_f033(self):
+    def test_op_code_f033(self) -> None:
         """
         FX33
 
         Stores the binary-coded decimal representation of VX, with the most significant of three digits at the
         address in I, the middle digit at I plus 1, and the least significant digit at I plus 2.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0xF733
@@ -717,15 +687,14 @@ class TestOpCodes(unittest.TestCase):
         self.assertEqual(0x7, self.cpu.ram[0x302])
         self.assertEqual(0x204, self.cpu.program_counter)
 
-    def test_op_code_f055(self):
+    def test_op_code_f055(self) -> None:
         """
         FX55
 
         Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for
         each value written, but I itself is left unmodified
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0xFE55
@@ -749,15 +718,14 @@ class TestOpCodes(unittest.TestCase):
         for index in range(0x300, 0x30F):
             self.assertEqual(0xFF, self.cpu.ram[index])
 
-    def test_op_code_f065(self):
+    def test_op_code_f065(self) -> None:
         """
         FX65
 
         Fills V0 to VX (including VX) with values from memory starting at address I.
         The offset from I is increased by 1 for each value written, but I itself is left unmodified.
 
-        :return: None
-        :rtype: None
+        :return: None.
         """
 
         op_code = 0xFE65
@@ -773,7 +741,3 @@ class TestOpCodes(unittest.TestCase):
 
         for index in range(0x0, 0xF):
             self.assertEqual(0xFF, self.cpu.registers[index])
-
-
-if __name__ == '__main__':
-    unittest.main()
