@@ -28,7 +28,7 @@ dependencies = [
 Repository = "https://github.com/jbfenton/chipmul8"
 
 [project.scripts]
-chipmul8 = "chipmul8:cli"
+chipmul8 = "chipmul8.cli:cli"
 
 [build-system]
 build-backend = "hatchling.build"
