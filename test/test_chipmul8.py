@@ -6,7 +6,7 @@ import unittest
 from random import Random
 from unittest.mock import patch
 
-from chipmul8.emulator.interpreter import Interpreter
+from chipmul8.interpreter import Interpreter
 
 
 class TestOpCodes(unittest.TestCase):
