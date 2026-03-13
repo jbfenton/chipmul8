@@ -1,16 +1,31 @@
 [project]
 description = "A simple CHIP-8 emulator written in Python."
+license = "MIT"
 name = "chipmul8"
 readme = "README.md"
-requires-python = ">=3.14.0"
+requires-python = ">=3.11.0"
 version = "0.1.0"
+
+authors = [
+    { name = "Josh Fenton", email = "josh@jbfenton.dev" },
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Games/Entertainment",
+]
 
 dependencies = [
     "click>=8.3.1",
     "numpy>=2.4.3",
-    "pyopengl>=3.1.7",
     "pygame>=2.6.1",
+    "pyopengl>=3.1.7",
 ]
+
+[project.urls]
+Repository = "https://github.com/jbfenton/chipmul8"
 
 [project.scripts]
 chipmul8 = "chipmul8:cli"
@@ -26,8 +41,7 @@ requires = [
 dev = [
     "coverage>=7.13.4",
     "mypy>=1.19.1",
-    "ruff>=0.15.5",
-    "types-setuptools>=82.0.0.20260210",
+    "ruff>=0.15.6",
 ]
 
 [tool.mypy]
@@ -106,10 +120,6 @@ src = [
     "PIE808",  # unnecessary range start arg (2 violations)
     "PT009",   # use pytest.raises instead of unittest-style (94 violations)
     "SLF001",  # private member access (1 violation)
-]
-"setup.py" = [
-    "D",       # no docstring requirements in setup.py
-    "INP001",  # implicit namespace package
 ]
 "src/**/*.py" = [
     # TODO: pre-existing violations — fix and remove these ignores
