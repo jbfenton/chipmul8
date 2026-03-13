@@ -4,7 +4,7 @@ license = "MIT"
 name = "chipmul8"
 readme = "README.md"
 requires-python = ">=3.11.0"
-version = "0.1.0"
+version = "0.2.0"
 
 authors = [
     { name = "Josh Fenton", email = "josh@jbfenton.dev" },
