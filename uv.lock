@@ -10,6 +10,7 @@ dependencies = [
     { name = "click" },
     { name = "numpy" },
     { name = "pygame" },
+    { name = "pyopengl" },
 ]
 
 [package.dev-dependencies]
@@ -25,6 +26,7 @@ requires-dist = [
     { name = "click", specifier = ">=8.3.1" },
     { name = "numpy", specifier = ">=2.4.3" },
     { name = "pygame", specifier = ">=2.6.1" },
+    { name = "pyopengl", specifier = ">=3.1.7" },
 ]
 
 [package.metadata.requires-dev]
@@ -202,6 +204,15 @@ name = "pygame"
 version = "2.6.1"
 source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/49/cc/08bba60f00541f62aaa252ce0cfbd60aebd04616c0b9574f755b583e45ae/pygame-2.6.1.tar.gz", hash = "sha256:56fb02ead529cee00d415c3e007f75e0780c655909aaa8e8bf616ee09c9feb1f", size = 14808125, upload-time = "2024-09-29T13:41:34.698Z" }
+
+[[package]]
+name = "pyopengl"
+version = "3.1.10"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/6f/16/912b7225d56284859cd9a672827f18be43f8012f8b7b932bc4bd959a298e/pyopengl-3.1.10.tar.gz", hash = "sha256:c4a02d6866b54eb119c8e9b3fb04fa835a95ab802dd96607ab4cdb0012df8335", size = 1915580, upload-time = "2025-08-18T02:33:01.76Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/de/e4/1ba6f44e491c4eece978685230dde56b14d51a0365bc1b774ddaa94d14cd/pyopengl-3.1.10-py3-none-any.whl", hash = "sha256:794a943daced39300879e4e47bd94525280685f42dbb5a998d336cfff151d74f", size = 3194996, upload-time = "2025-08-18T02:32:59.902Z" },
+]
 
 [[package]]
 name = "ruff"
