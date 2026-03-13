@@ -35,6 +35,7 @@ keymap: Final = MappingProxyType(
 )
 # fmt: on
 
+
 class GameEngine:
     clock: pygame.time.Clock
 

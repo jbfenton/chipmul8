@@ -1,6 +1,7 @@
 """
 CHIP-8 Interpreter.
 """
+
 from io import BufferedReader
 from random import Random
 from typing import Final
@@ -106,7 +107,7 @@ class Interpreter:
             if str(op_code_lookup).startswith("opcode_")
         }
 
-    def __init__(self, start_address: int =0x200):
+    def __init__(self, start_address: int = 0x200):
         """
         :param start_address: Interpreter memory start location.
         :type start_address: int
