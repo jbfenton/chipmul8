@@ -12,7 +12,7 @@ import pygame
 from OpenGL.GL import GL_COLOR_BUFFER_BIT, GL_RGB, GL_UNSIGNED_BYTE, glClear, glClearColor, glDrawPixels
 from pygame.locals import K_1, K_2, K_3, K_4, K_a, K_c, K_d, K_e, K_f, K_q, K_r, K_s, K_v, K_w, K_x, K_z
 
-from chipmul8.emulator.interpreter import Interpreter
+from chipmul8.interpreter import Interpreter
 
 if TYPE_CHECKING:
     from io import BufferedReader
